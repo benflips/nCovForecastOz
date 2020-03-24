@@ -1,0 +1,115 @@
+## ---------------------------
+##
+## Script name: ui.R
+##
+## Purpose of script:  Specifies user interface for coronaRisk app
+##
+## Author: Ben Phillips
+##
+## Date Created: 2020-03-12
+##
+## Email: phillipsb@unimelb.edu.au
+##
+## ---------------------------
+##
+## Notes:
+##   
+##
+## --------------------------
+## load up the packages we will need 
+library(shiny)
+
+## ---------------------------
+
+## load up our functions into memory
+## source files
+source("getData.R")
+
+## ---------------------------
+## ---------------------------
+options(scipen=9)
+
+# Define UI
+shinyUI(fluidPage(
+  
+  # Application title
+  titlePanel("Coronavirus 10-day forecast -- Australia"),
+  navbarPage(p("As of", format(dates[length(dates)], "%d %b")),
+##### 10-day forecast #####             
+      tabPanel("10-day forecast",
+             # Sidebar 
+             sidebarLayout(
+               sidebarPanel(
+                 titlePanel("Location"),
+                 selectInput(inputId = "stateFinder",
+                             label = "Select State:",
+                             choices = ddReg, 
+                             selected = ddNames[1]),
+                 h5("Raw case numbers:"),
+                 tableOutput(outputId = "rawStats"),
+                 h5("Active cases:"),
+                 tableOutput(outputId = "tablePredConf"),
+                 h5("Doubling time (days):"),
+                 textOutput(outputId = "doubTime"),
+                 titlePanel("Detection"),
+                 h5("Estimated proportion of cases detected:"),
+                 textOutput(outputId = "detRate"),
+                 h5("Possible true number of cases now given imperfect detection:"),
+                 textOutput(outputId = "tablePredTrue"),
+                 hr(),
+                 p("Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported)."),
+                 p("Active cases are total number of infections minus deaths and recoveries."),
+                 p("For more information, see", 
+                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
+               ),
+               
+               # Show a plot of the generated distribution
+               mainPanel(
+                 plotOutput("rawPlot"),
+                 plotOutput("logPlot")
+               )
+             )
+      ),
+##### Growth Rate ##### 
+      tabPanel("Growth rate",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   checkboxGroupInput(inputId = "stateGrowthRate",
+                                      label = "Select State:",
+                                      choices = ddReg,
+                                      selected = ddNames[1:3])
+                 ),
+                 mainPanel(
+                   plotOutput("growthRate"),
+                   p("This is the growth rate of the number of active cases for the last 10 days."),
+                   p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
+                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.")
+                 )
+               )
+      ),
+##### CFI ##### 
+      tabPanel("Curve-flattening index",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   checkboxGroupInput(inputId = "stateFinderCFI",
+                                      label = "Select State:",
+                                      choices = ddReg, 
+                                      selected = ddNames[1:3])
+                 ),
+                 mainPanel(
+                   plotOutput("cfi"),
+                   h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values are good, and China is an excellent reference series."),
+                   h5("The index is sensitive to changes in screening/reporting.  
+                      It's only as good as the data."),
+                   h5(p("For more details see", 
+                        a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+                 )
+               )
+      )
+      
+  )
+))

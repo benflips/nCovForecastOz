@@ -80,13 +80,13 @@ shinyUI(fluidPage(
                    checkboxGroupInput(inputId = "stateGrowthRate",
                                       label = "Select State:",
                                       choices = ddReg,
-                                      selected = ddNames[1:3])
+                                      selected = ddNames)
                  ),
                  mainPanel(
                    plotOutput("growthRate"),
                    p("This is the growth rate of the number of active cases for the last 10 days."),
                    p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
-                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.")
+                   p("Note, days with low or zero growth followed by large spikes are reporting issues: states miss a day (or several) of reporting and then aggregate cases into the following day.")
                  )
                )
       ),

@@ -26,8 +26,8 @@ source("functions.R")
 
 ## ---------------------------
 
-
-## Get data
+##### Case data #####
+## Get case data
 tsConf <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
 tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
 
@@ -65,5 +65,6 @@ ddNames <- tsA$Province.State
 ddReg <- ddNames
 names(ddReg) <- ddNames
 
-
+##### Bed data #####
+beds <-read.csv("dat/Table1_ICU-beds-Australia.csv", stringsAsFactors = FALSE)
 

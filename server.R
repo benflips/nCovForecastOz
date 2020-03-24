@@ -146,7 +146,7 @@ shinyServer(function(input, output) {
   })
 ##### Growth rate #####    
   output$growthRate <- renderPlot({
-    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateGrowthRate)
+    pDat <- subset(tsA[,dCols], tsA$Province.State %in% input$stateGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
     clrs<-hcl.colors(length(input$stateGrowthRate))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]

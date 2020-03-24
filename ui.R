@@ -59,7 +59,8 @@ shinyUI(fluidPage(
                  hr(),
                  p("Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported)."),
                  p("Active cases are total number of infections minus deaths and recoveries."),
-                 p("For more information, see", 
+                 p("For code and further information, see", 
+                      a("here.", href = "https://github.com/benflips/nCovForecastOz", target="_blank"), "and",
                       a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
                ),
                

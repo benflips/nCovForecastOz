@@ -25,7 +25,7 @@
 #splits symptomatic into into critical, severe and mild
   #accounts for detection, and 
   # moves them forward tth = time to hospitalisation
-splitter <- function(active, time, tth = 6, fracSev = 0.15, fracCrit = 0.05, det = 0.24){
+splitter <- function(active, time, tth = 6, fracSev = 0.15, fracCrit = 0.05, det = 0.36){
   newCases <- c(0, diff(active))
   nn <- length(newCases)
   newCases[newCases<0]<-0 # catch negatives

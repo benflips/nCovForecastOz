@@ -65,6 +65,4 @@ ddNames <- tsA$Province.State
 ddReg <- ddNames
 names(ddReg) <- ddNames
 
-##### Bed data #####
-beds <-read.csv("dat/Table1_ICU-beds-Australia.csv", stringsAsFactors = FALSE)
 

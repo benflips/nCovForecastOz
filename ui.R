@@ -70,26 +70,7 @@ shinyUI(fluidPage(
                  plotOutput("logPlot")
                )
              )
-      ),
-      
-      tabPanel("Hospitalisations",
-           sidebarLayout(
-             sidebarPanel(
-               titlePanel("Location"),
-               selectInput(inputId = "stateFinderHosp",
-                           label = "Select State:",
-                           choices = ddReg,
-                           selected = ddNames[1])
-             ),
-             mainPanel(
-               plotOutput("sevPlot"),
-               plotOutput("critPlot"),
-               p("Red line indicates available ICU beds, assuming 80% are already occupied."),
-               p("Points represent the number of new cases 6 days ago that are likely to be hospitalised on that date.  So points actually occur six days into the future on this plot, and the line extrapolates a further 4 days."),
-               p("This is all very rough, and has been done in a tearing hurry on the 24 march.  Updates and refinements will follow over coming days.")
-             )
-           )    
-               )
+      )
 
 # ##### Growth Rate ##### 
 #       tabPanel("Growth rate",

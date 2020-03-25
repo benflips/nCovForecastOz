@@ -185,47 +185,4 @@ shinyServer(function(input, output) {
             args.legend = list(bty = "n", x = "topleft"))
   })
 
-  # ##### Severe by day #####
-  output$sevPlot <-renderPlot({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinderHosp)
-    yH <- splitter(yA, time = dates)
-    projSev <- projSimple(yH$severe, yH$date, extWindow = 4)
-    yMax <- max(c(projSev$y[,"fit"], yH$severe), na.rm = TRUE)
-    yTxt <- "Severe cases"
-    plot(yH$severe~yH$date,
-         xlim = c(min(dates), max(projSev$x)),
-         ylim = c(0, yMax),
-         pch = 19,
-         bty = "u",
-         xlab = "Date",
-         ylab = yTxt,
-         main = input$stateFinderHosp)
-    axis(side = 4)
-    lines(projSev$y[, "fit"]~projSev$x, lty = 1)
-    lines(projSev$y[, "lwr"]~projSev$x, lty = 2)
-    lines(projSev$y[, "upr"]~projSev$x, lty = 2)
-  })
-  
-  # ##### Critical by day #####
-  output$critPlot <-renderPlot({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinderHosp)
-    yH <- splitter(yA, time = dates)
-    projCrit <- projSimple(yH$critical, yH$date, extWindow = 4)
-    yMax <- max(c(projCrit$y[,"fit"], yH$critical), na.rm = TRUE)
-    yTxt <- "Critical cases"
-    plot(yH$critical~yH$date,
-         xlim = c(min(dates), max(projCrit$x)),
-         ylim = c(0, yMax),
-         pch = 19,
-         bty = "u",
-         xlab = "Date",
-         ylab = yTxt,
-         main = input$stateFinderHosp)
-    axis(side = 4)
-    lines(projCrit$y[, "fit"]~projCrit$x, lty = 1)
-    lines(projCrit$y[, "lwr"]~projCrit$x, lty = 2)
-    lines(projCrit$y[, "upr"]~projCrit$x, lty = 2)
-    abline(b = 0, a = beds$ICUBeds[beds$state==input$stateFinderHosp]*0.2, lwd = 3, col = "red")
-  })
-
 })

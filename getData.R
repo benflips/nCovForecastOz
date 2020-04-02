@@ -58,6 +58,9 @@ matA <- matA - matR
 
 tsA <- cbind(tsI[,!dCols], matA) # active cases
 
+tsA <- natAgg(tsA)
+tsI <- natAgg(tsI)
+tsD <- natAgg(tsD)
 
 ## Define menus
 # get region names 

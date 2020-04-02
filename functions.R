@@ -22,6 +22,17 @@
 
 ## function definitions
 
+# calculates a nation aggregate and appends to dataframe
+natAgg <-function(tsDF){
+  cAgg <- tsSub(tsDF, subset = tsDF$Country.Region==tsDF$Country.Region[1])
+  dim(cAgg)<-c(1, length(cAgg))
+  cAgg<-data.frame(tsI[1, !dCols], cAgg)
+  cAgg$Province.State <- "National aggregate"
+  colnames(cAgg)<-colnames(tsDF)
+  rbind(cAgg, tsDF)
+}
+
+
 #splits symptomatic into into critical, severe and mild
   #accounts for detection, and 
   # moves them forward tth = time to hospitalisation

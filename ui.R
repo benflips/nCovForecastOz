@@ -78,7 +78,7 @@ shinyUI(fluidPage(
                    selectInput(inputId = "stateGrowthRate",
                                       label = "Select State:",
                                       choices = ddReg,
-                                      selected = ddNames[1:3],
+                                      selected = ddNames[c(1, 3, 8, 9)],
                                       multiple = TRUE)
                  ),
                  mainPanel(

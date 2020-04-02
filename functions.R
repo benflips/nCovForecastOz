@@ -54,7 +54,7 @@ splitter <- function(active, time, tth = 6, fracSev = 0.15, fracCrit = 0.05, det
 
 # calculates doubling time over the last inWindow days.
 doubTime <- function(cases, time, inWindow = 10){
-  r <- projSimpleSlope(cases, time)[2]
+  r <- projSimpleSlope(cases, time, inWindow = inWindow)[2]
   log(2)/r
 }
 

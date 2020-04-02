@@ -29,9 +29,19 @@ options(scipen=9)
 
 # Define server logic 
 shinyServer(function(input, output) {
+  #### Reactive expressions for forecast page ####
+  yAfCast <-reactive({ # subset country for forecast page
+    tsSub(tsA,tsA$Province.State %in% input$stateFinder)
+  })
+  
+  projfCast <- reactive({ # projection for forecast
+    yA <- yAfCast()
+    projSimple(yA, dates, inWindow = input$fitWinSlider)
+  })
+  
   ##### Raw stats #####  
   output$rawStats <- renderTable({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinder)
+    yA <- yAfCast()
     yD <- tsSub(tsD,tsD$Province.State %in% input$stateFinder)
     yI <- tsSub(tsI,tsI$Province.State %in% input$stateFinder)
     #yR <- tsSub(tsR,tsR$Province.State %in% input$stateFinder)
@@ -45,8 +55,8 @@ shinyServer(function(input, output) {
   
 ##### Raw plot #####  
   output$rawPlot <- renderPlot({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinder)
-    lDat <- projSimple(yA, dates)
+    yA <-  yAfCast()
+    lDat <- projfCast()
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
     yTxt <- "Confirmed active cases"
     plot(yA~dates, 
@@ -65,8 +75,8 @@ shinyServer(function(input, output) {
   
 ##### Log plot #####    
   output$logPlot <- renderPlot({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinder)
-    lDat <- projSimple(yA, dates)
+    yA <-  yAfCast()
+    lDat <- projfCast()
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
     yTxt <- "Confirmed active cases (log scale)"
     plot((yA+0.1)~dates, 
@@ -94,8 +104,8 @@ shinyServer(function(input, output) {
   
 ##### Prediction table confirmed #####    
   output$tablePredConf <- renderTable({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinder)
-    lDat <- projSimple(yA, dates)
+    yA <-  yAfCast()
+    lDat <- projfCast()
     nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))), big.mark = ",")
     nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
     dim(nowThen) <- c(1, 2)
@@ -105,11 +115,10 @@ shinyServer(function(input, output) {
   
 ##### Prediction table true #####    
   output$tablePredTrue <- renderText({
-    yA <- tsSub(tsA,tsA$Province.State %in% input$stateFinder)
+    yA <-  yAfCast()
     yD <- tsSub(tsD,tsD$Province.State %in% input$stateFinder)
     yI <- tsSub(tsI,tsI$Province.State %in% input$stateFinder)
     dRate <- detRate(yI, yD)
-    lDat <- projSimple(yA, dates)
     now <- tail(yA[!is.na(yA)], 1)
     nowTrue <- format(round(now/dRate, 0), big.mark = ",")
     nowTrue
@@ -160,13 +169,13 @@ shinyServer(function(input, output) {
   
 ##### Doubling time ##### 
   output$doubTime <- renderText({
-    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateFinder)
-    dTime <- round(doubTime(pDat, dates), 1)
+    pDat <- yAfCast()
+    dTime <- round(doubTime(cases = pDat, time = dates, inWindow = input$fitWinSlider), 1)
   })
   
 ##### Doubling time plot #####    
   output$doubTimePlot <- renderPlot({
-    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateGrowthRate)
+    pDat <- yAfCast()
     dTime <- as.matrix(doubTime(pDat))
     dTime[!is.finite(dTime)]<-NA
     clrs<-hcl.colors(length(input$stateGrowthRate))

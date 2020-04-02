@@ -23,7 +23,7 @@ library("readr")
 ## ---------------------------
 ## load up functions
 source("functions.R")
-
+focusCountry <- "Australia"
 ## ---------------------------
 
 ##### Case data #####
@@ -45,8 +45,8 @@ names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 #names(tsT)[!dCols] <- make.names(names(tsT)[!dCols])
 
 # subset to Australia
-tsI <- subset(tsI, tsI$Country.Region == "Australia")
-tsD <- subset(tsD, tsD$Country.Region == "Australia")
+tsI <- subset(tsI, tsI$Country.Region == focusCountry)
+tsD <- subset(tsD, tsD$Country.Region == focusCountry)
 
 
 ## add recovery lag -- assumes all cases recover at 22 days

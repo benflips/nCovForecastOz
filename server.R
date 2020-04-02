@@ -143,9 +143,9 @@ shinyServer(function(input, output) {
   })
 ##### Growth rate #####    
   output$growthRate <- renderPlot({
-    pDat <- subset(tsA[,dCols], tsA$Province.State %in% input$stateGrowthRate)
-    gRate <- as.matrix(growthRate(pDat))
-    clrs<-hcl.colors(length(pDat$Province.State))
+    pDat <- subset(tsA, tsA$Province.State %in% input$stateGrowthRate)
+    gRate <- as.matrix(growthRate(pDat[,dCols]))
+    clrs<-hcl.colors(length(input$stateGrowthRate))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]
     counts <- table(gRate)
     barplot(gRate,
@@ -155,7 +155,7 @@ shinyServer(function(input, output) {
             beside=TRUE,
             col = clrs,
             legend = pDat$Province.State,
-            args.legend = list(bty = "n", x = "topleft"))
+            args.legend = list(bty = "n", x = "topright"))
   })
   
 ##### Doubling time ##### 

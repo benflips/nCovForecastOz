@@ -59,9 +59,7 @@ shinyUI(fluidPage(
                  hr(),
                  p("Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported)."),
                  p("Active cases are total number of infections minus deaths and recoveries."),
-                 p("For code and further information, see", 
-                      a("here.", href = "https://github.com/benflips/nCovForecastOz", target="_blank"), "and",
-                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
+                 p("For more information, see the 'About' tab.") 
                ),
                
                # Show a plot of the generated distribution
@@ -70,47 +68,39 @@ shinyUI(fluidPage(
                  plotOutput("logPlot")
                )
              )
-      )
-
+      ),
 # ##### Growth Rate ##### 
-#       tabPanel("Growth rate",
-#                # Sidebar
-#                sidebarLayout(
-#                  sidebarPanel(
-#                    titlePanel("Location selector"),
-#                    checkboxGroupInput(inputId = "stateGrowthRate",
-#                                       label = "Select State:",
-#                                       choices = ddReg,
-#                                       selected = ddNames)
-#                  ),
-#                  mainPanel(
-#                    plotOutput("growthRate"),
-#                    p("This is the growth rate of the number of active cases for the last 10 days."),
-#                    p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
-#                    p("Note, days with low or zero growth followed by large spikes are reporting issues: states miss a day (or several) of reporting and then aggregate cases into the following day.")
-#                  )
-#                )
-#       )
-##### CFI ##### 
-      # tabPanel("Curve-flattening index",
-      #          # Sidebar
-      #          sidebarLayout(
-      #            sidebarPanel(
-      #              titlePanel("Location selector"),
-      #              checkboxGroupInput(inputId = "stateFinderCFI",
-      #                                 label = "Select State:",
-      #                                 choices = ddReg, 
-      #                                 selected = ddNames[1:3])
-      #            ),
-      #            mainPanel(
-      #              plotOutput("cfi"),
-      #              h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values are good, and China is an excellent reference series."),
-      #              h5("The index is sensitive to changes in screening/reporting.  
-      #                 It's only as good as the data."),
-      #              h5(p("For more details see", 
-      #                   a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
-      #            )
-      #          )
-      # )
+      tabPanel("Growth rate and curve flattening",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   selectInput(inputId = "stateGrowthRate",
+                                      label = "Select State:",
+                                      choices = ddReg,
+                                      selected = ddNames[1:3],
+                                      multiple = TRUE)
+                 ),
+                 mainPanel(
+                   h5("Growth rate"),
+                   p("This is the growth rate of the number of active cases for the last 10 days.  It can be thought of as the interest rate, compounded daily."),
+                   p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
+                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day."),
+                   plotOutput("growthRate"),
+                   hr(),
+                   h5("Curve flattening index"),
+                   p("This is a measure of how well a country is flattening the epidemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
+                   p("Note, this last plot covers the entire time period of the pandemic, not just the last ten days."),
+                   plotOutput("cfi"),
+                   p("For more information, see the 'About' tab.") 
+                 )
+               )
+      ),
+      tabPanel("About", br(),
+         fluidRow(column(12,
+                         withMathJax(),
+                         includeMarkdown("doc/about.Rmd")
+         )))
+      
   )
 ))

@@ -112,20 +112,17 @@ shinyServer(function(input, output) {
     lDat <- projSimple(yA, dates)
     now <- tail(yA[!is.na(yA)], 1)
     nowTrue <- format(round(now/dRate, 0), big.mark = ",")
-    #nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
-    #dim(nowThenTrue) <- c(1, 2)
-    #colnames(nowThenTrue)<-c("Now", "In 10 days (min-max)")
     nowTrue
   })
   
 ##### Curve-flattenning #####    
   output$cfi <- renderPlot({
-    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateFinderCFI)
+    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateFinder)
     pMat<-as.matrix(log(pDat[,-1]))
     row.names(pMat)<-pDat$Province.State
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
-    clrs<-hcl.colors(length(input$stateFinderCFI))
+    clrs<-hcl.colors(length(input$stateFinder))
     dateSub<-3:length(dates) # date tsSub
     plot(cfiDat[,1]~dates[dateSub], 
          type = "n", 
@@ -139,7 +136,7 @@ shinyServer(function(input, output) {
       lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=2)
     }
     legend("topleft", 
-           legend = input$stateFinderCFI, 
+           legend = input$stateFinder, 
            lty = 1, 
            col = clrs,
            bty = "n")

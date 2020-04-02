@@ -117,12 +117,12 @@ shinyServer(function(input, output) {
   
 ##### Curve-flattenning #####    
   output$cfi <- renderPlot({
-    pDat <- tsSub(tsA, tsA$Province.State %in% input$stateFinder)
-    pMat<-as.matrix(log(pDat[,-1]))
+    pDat <- subset(tsA, tsA$Province.State %in% input$stateGrowthRate)
+    pMat<-as.matrix(log(pDat[,-(1:4)]))
     row.names(pMat)<-pDat$Province.State
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
-    clrs<-hcl.colors(length(input$stateFinder))
+    clrs<-hcl.colors(length(pDat$Province.State))
     dateSub<-3:length(dates) # date tsSub
     plot(cfiDat[,1]~dates[dateSub], 
          type = "n", 
@@ -136,25 +136,25 @@ shinyServer(function(input, output) {
       lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=2)
     }
     legend("topleft", 
-           legend = input$stateFinder, 
-           lty = 1, 
+           legend = pDat$Province.State,
            col = clrs,
+           lty = 1,
            bty = "n")
   })
 ##### Growth rate #####    
   output$growthRate <- renderPlot({
     pDat <- subset(tsA[,dCols], tsA$Province.State %in% input$stateGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
-    clrs<-hcl.colors(length(input$stateGrowthRate))
+    clrs<-hcl.colors(length(pDat$Province.State))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]
     counts <- table(gRate)
     barplot(gRate,
             main="Growth rate",
             xlab="Date", 
-            ylab="Growth rate",
+            ylab="Growth rate (% per day)",
             beside=TRUE,
             col = clrs,
-            legend = input$stateGrowthRate,
+            legend = pDat$Province.State,
             args.legend = list(bty = "n", x = "topleft"))
   })
   
